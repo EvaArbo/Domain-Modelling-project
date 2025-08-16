@@ -104,7 +104,7 @@ A Magazine can hold many Articles.
 
 An Article belongs to exactly one Author and one Magazine.
 
-⚡ How to Run
+⚡ How to Run the code:
 
 Clone the repository:
 
