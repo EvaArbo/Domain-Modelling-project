@@ -1,57 +1,30 @@
-from article import Article
-
 class Magazine:
-    _all = []  # To track all magazines for top_publisher
-
     def __init__(self, name, category):
-        self.name = name
-        self.category = category
-        Magazine._all.append(self)
+        if not isinstance(name, str):
+            raise TypeError("Magazine name must be a string")
+        if len(name) < 2 or len(name) > 16:
+            raise ValueError("Magazine name must be between 2 and 16 characters")
+        if not isinstance(category, str):
+            raise TypeError("Magazine category must be a string")
+        if len(category) == 0:
+            raise ValueError("Magazine category cannot be empty")
+
+        self._name = name
+        self._category = category
+        self._articles = []
 
     @property
     def name(self):
         return self._name
 
-    @name.setter
-    def name(self, value):
-        if not isinstance(value, str) or not (2 <= len(value) <= 16):
-            raise Exception("Magazine name must be a string between 2 and 16 chars.")
-        self._name = value.strip()
-
     @property
     def category(self):
         return self._category
 
-    @category.setter
-    def category(self, value):
-        if not isinstance(value, str) or len(value.strip()) == 0:
-            raise Exception("Category must be a non-empty string.")
-        self._category = value.strip()
-
     def articles(self):
-        """Return all articles for this magazine"""
-        return [article for article in Article._all if article.magazine == self]
+        """Return list of articles published in this magazine"""
+        return self._articles
 
     def contributors(self):
-        """Return unique authors who wrote for this magazine"""
-        return list(set(article.author for article in self.articles()))
-
-    def article_titles(self):
-        """Return all article titles or None"""
-        titles = [article.title for article in self.articles()]
-        return titles if titles else None
-
-    def contributing_authors(self):
-        """Return authors with >2 articles for this magazine"""
-        author_counts = {}
-        for article in self.articles():
-            author_counts[article.author] = author_counts.get(article.author, 0) + 1
-        result = [author for author, count in author_counts.items() if count > 2]
-        return result if result else None
-
-    @classmethod
-    def top_publisher(cls):
-        """Return magazine with most articles or None"""
-        if not Article._all:
-            return None
-        return max(cls._all, key=lambda mag: len(mag.articles()))
+        """Return list of unique authors that wrote in this magazine"""
+        return list({article.author for article in self._articles})

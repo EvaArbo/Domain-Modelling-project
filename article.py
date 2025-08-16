@@ -1,16 +1,21 @@
 class Article:
-    _all = []  # Keeps track of all articles
-
     def __init__(self, author, magazine, title):
-        self.author = author
-        self.magazine = magazine
-        if not isinstance(title, str) or not (5 <= len(title) <= 50):
-            raise Exception("Title must be a string between 5 and 50 chars.")
-        if hasattr(self, "_title"):  # Prevent reassignment
-            #hasattr(self, "_title") checks if the title has already been set
-            raise Exception("Title cannot be changed once set.")
-        self._title = title.strip()
-        Article._all.append(self)
+        if not isinstance(title, str):
+            raise TypeError("Article title must be a string")
+        if len(title) < 5 or len(title) > 50:
+            raise ValueError("Article title must be between 5 and 50 characters")
+
+        from author import Author
+        from magazine import Magazine
+
+        if not isinstance(author, Author):
+            raise TypeError("author must be an instance of Author")
+        if not isinstance(magazine, Magazine):
+            raise TypeError("magazine must be an instance of Magazine")
+
+        self._title = title
+        self._author = author
+        self._magazine = magazine
 
     @property
     def title(self):
@@ -20,20 +25,6 @@ class Article:
     def author(self):
         return self._author
 
-    @author.setter
-    def author(self, value):
-        from author import Author
-        if not isinstance(value, Author):
-            raise Exception("Author must be an Author instance.")
-        self._author = value
-
     @property
     def magazine(self):
         return self._magazine
-
-    @magazine.setter
-    def magazine(self, value):
-        from magazine import Magazine
-        if not isinstance(value, Magazine):
-            raise Exception("Magazine must be a Magazine instance.")
-        self._magazine = value
